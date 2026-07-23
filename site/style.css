@@ -274,9 +274,12 @@ html { scroll-behavior: smooth; }
   font-weight: 800;
   margin: 16px 0 18px;
 }
-.section-head h2.on-dark { color: #fff; }
 .section-head p { font-size: 18px; color: #475569; line-height: 1.6; }
-.section-head p.on-dark-muted { color: #94A3B8; }
+/* on-dark helpers must apply anywhere they're used (contact heading lives
+   outside .section-head), otherwise the text falls back to the dark body
+   color and disappears against the dark background */
+.on-dark { color: #fff; }
+.on-dark-muted { color: #94A3B8; }
 
 /* ============ SERVICIOS ============ */
 .services-grid {
