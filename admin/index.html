@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Panel de Administración — Koral&amp;Marea</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="admin.css">
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginView" class="login-view">
+  <form id="loginForm" class="login-card">
+    <img src="/assets/logo.png" alt="Koral&amp;Marea" class="login-logo" />
+    <h1>Panel de Administración</h1>
+    <p class="login-sub">Koral<span class="accent">&amp;</span>Marea Productions</p>
+    <label class="field">
+      <span>Email</span>
+      <input type="email" name="email" required autocomplete="username" />
+    </label>
+    <label class="field">
+      <span>Contraseña</span>
+      <input type="password" name="password" required autocomplete="current-password" />
+    </label>
+    <div class="form-error" id="loginError" hidden></div>
+    <button type="submit" class="btn-primary">Ingresar</button>
+  </form>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboardView" class="dashboard-view" hidden>
+  <header class="admin-header">
+    <div class="admin-brand">
+      <img src="/assets/logo.png" alt="Koral&amp;Marea" />
+      <span>Koral<span class="accent">&amp;</span>Marea <small>· Admin</small></span>
+    </div>
+    <div class="admin-header-actions">
+      <a href="/" target="_blank" rel="noopener" class="btn-ghost-sm">Ver sitio ↗</a>
+      <button id="logoutBtn" class="btn-ghost-sm">Cerrar sesión</button>
+    </div>
+  </header>
+
+  <nav class="tabs">
+    <button class="tab-btn is-active" data-tab="portfolio">Portafolio</button>
+    <button class="tab-btn" data-tab="services">Servicios</button>
+    <button class="tab-btn" data-tab="contact">WhatsApp &amp; Contacto</button>
+    <button class="tab-btn" data-tab="about">Nosotros</button>
+  </nav>
+
+  <main class="tab-panels">
+
+    <!-- PORTFOLIO -->
+    <section class="tab-panel is-active" data-panel="portfolio">
+      <div class="panel-head">
+        <h2>Portafolio</h2>
+        <button class="btn-primary" id="addPortfolioBtn">+ Agregar caso</button>
+      </div>
+      <div id="portfolioList" class="portfolio-admin-grid"></div>
+    </section>
+
+    <!-- SERVICES -->
+    <section class="tab-panel" data-panel="services">
+      <div class="panel-head">
+        <h2>Servicios</h2>
+        <button class="btn-primary" id="saveServicesBtn">Guardar cambios</button>
+      </div>
+      <div id="servicesList" class="services-admin-list"></div>
+    </section>
+
+    <!-- CONTACT -->
+    <section class="tab-panel" data-panel="contact">
+      <div class="panel-head">
+        <h2>WhatsApp &amp; Contacto</h2>
+        <button class="btn-primary" id="saveContactBtn">Guardar cambios</button>
+      </div>
+      <form id="contactForm" class="card-form">
+        <h3>WhatsApp</h3>
+        <label class="field">
+          <span>Número (con código de país, sin + ni espacios)</span>
+          <input type="text" name="whatsappNumber" placeholder="5490000000000" />
+        </label>
+        <label class="field">
+          <span>Mensaje predefinido</span>
+          <input type="text" name="whatsappMessage" placeholder="Hola Koral&amp;Marea, quiero información" />
+        </label>
+        <h3>Datos de contacto</h3>
+        <label class="field">
+          <span>Email</span>
+          <input type="email" name="email" placeholder="hola@koralmarea.com" />
+        </label>
+        <label class="field">
+          <span>Teléfono</span>
+          <input type="text" name="phone" placeholder="+00 000 000 000" />
+        </label>
+        <label class="field">
+          <span>Usuario de redes</span>
+          <input type="text" name="social" placeholder="@koralmarea" />
+        </label>
+      </form>
+    </section>
+
+    <!-- ABOUT -->
+    <section class="tab-panel" data-panel="about">
+      <div class="panel-head">
+        <h2>Nosotros</h2>
+        <button class="btn-primary" id="saveAboutBtn">Guardar cambios</button>
+      </div>
+      <h3 class="subhead">Barras de habilidades</h3>
+      <div id="skillsList" class="skills-admin-list"></div>
+      <h3 class="subhead">Estadísticas</h3>
+      <div id="statsList" class="stats-admin-list"></div>
+    </section>
+
+  </main>
+</div>
+
+<div id="toast" class="toast" hidden></div>
+
+<!-- PORTFOLIO ITEM MODAL -->
+<div id="portfolioModal" class="modal" hidden>
+  <div class="modal-card">
+    <h2 id="portfolioModalTitle">Caso de portafolio</h2>
+    <form id="portfolioForm">
+      <label class="field">
+        <span>Título</span>
+        <input type="text" name="title" required />
+      </label>
+      <label class="field">
+        <span>Categoría / etiqueta</span>
+        <input type="text" name="tag" required placeholder="Branding" />
+      </label>
+      <label class="field">
+        <span>Descripción</span>
+        <textarea name="desc" rows="3" required></textarea>
+      </label>
+      <div class="field-row">
+        <label class="field">
+          <span>Métrica 1 — valor</span>
+          <input type="text" name="metric1Value" placeholder="+180%" />
+        </label>
+        <label class="field">
+          <span>Métrica 1 — etiqueta</span>
+          <input type="text" name="metric1Label" placeholder="Reconocimiento" />
+        </label>
+      </div>
+      <div class="field-row">
+        <label class="field">
+          <span>Métrica 2 — valor</span>
+          <input type="text" name="metric2Value" placeholder="3" />
+        </label>
+        <label class="field">
+          <span>Métrica 2 — etiqueta</span>
+          <input type="text" name="metric2Label" placeholder="Meses" />
+        </label>
+      </div>
+      <label class="field">
+        <span>Imagen (opcional — si no subís una se usa un degradado)</span>
+        <input type="file" name="image" accept="image/png,image/jpeg,image/webp,image/gif" />
+      </label>
+      <div id="portfolioImagePreview" class="image-preview" hidden>
+        <img alt="Vista previa" />
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn-ghost-sm" id="portfolioModalCancel">Cancelar</button>
+        <button type="submit" class="btn-primary">Guardar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="admin.js"></script>
+</body>
+</html>

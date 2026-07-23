@@ -1,0 +1,80 @@
+{
+  "services": [
+    {
+      "id": "branding",
+      "title": "Branding",
+      "desc": "Construimos identidades memorables: logotipo, sistema visual y voz de marca coherente en cada punto de contacto.",
+      "points": ["Identidad visual completa", "Manual de marca", "Naming y tono de voz"]
+    },
+    {
+      "id": "social",
+      "title": "Manejo de Redes Sociales",
+      "desc": "Contenido que conecta y comunidades que crecen. Planificamos, creamos y medimos cada publicación.",
+      "points": ["Calendario de contenido", "Diseño y copywriting", "Reportes de métricas"]
+    },
+    {
+      "id": "web",
+      "title": "Servicios Web",
+      "desc": "Sitios web rápidos, responsive y optimizados para convertir visitantes en clientes.",
+      "points": ["Diseño UX/UI", "Desarrollo responsive", "Optimización y SEO"]
+    }
+  ],
+  "portfolio": [
+    {
+      "id": "oceano-cafe",
+      "tag": "Branding",
+      "title": "Océano Café",
+      "desc": "Rebranding completo para una cadena de cafeterías de especialidad.",
+      "image": null,
+      "grad": "linear-gradient(135deg,#1E3A8A,#6366F1)",
+      "metrics": [{ "value": "+180%", "label": "Reconocimiento" }, { "value": "3", "label": "Meses" }]
+    },
+    {
+      "id": "marea-fitness",
+      "tag": "Redes Sociales",
+      "title": "Marea Fitness",
+      "desc": "Estrategia de contenido y comunidad para un estudio de entrenamiento.",
+      "image": null,
+      "grad": "linear-gradient(135deg,#6366F1,#FF6B6B)",
+      "metrics": [{ "value": "+42K", "label": "Seguidores" }, { "value": "8.5%", "label": "Engagement" }]
+    },
+    {
+      "id": "coral-realty",
+      "tag": "Desarrollo Web",
+      "title": "Coral Realty",
+      "desc": "Plataforma inmobiliaria con buscador avanzado y agenda de citas.",
+      "image": null,
+      "grad": "linear-gradient(135deg,#0F172A,#1E3A8A)",
+      "metrics": [{ "value": "+65%", "label": "Conversión" }, { "value": "1.2s", "label": "Carga" }]
+    },
+    {
+      "id": "sal-y-sol",
+      "tag": "Campaña 360°",
+      "title": "Sal & Sol Resort",
+      "desc": "Lanzamiento integral de temporada: branding, redes y landing.",
+      "image": null,
+      "grad": "linear-gradient(135deg,#FF6B6B,#1E3A8A)",
+      "metrics": [{ "value": "+3.2x", "label": "Reservas" }, { "value": "2M", "label": "Alcance" }]
+    }
+  ],
+  "skills": [
+    { "name": "Branding & Diseño", "pct": 96 },
+    { "name": "Redes Sociales", "pct": 92 },
+    { "name": "Desarrollo Web", "pct": 89 }
+  ],
+  "stats": [
+    { "target": 120, "suffix": "+", "label": "Proyectos entregados" },
+    { "target": 98, "suffix": "%", "label": "Clientes satisfechos" },
+    { "target": 8, "suffix": " años", "label": "De experiencia" },
+    { "target": 45, "suffix": "M", "label": "De impresiones" }
+  ],
+  "whatsapp": {
+    "number": "000000000",
+    "message": "Hola Koral&Marea, quiero información"
+  },
+  "contact": {
+    "email": "hola@koralmarea.com",
+    "phone": "+00 000 000 000",
+    "social": "@koralmarea"
+  }
+}
