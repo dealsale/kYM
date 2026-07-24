@@ -80,7 +80,7 @@ input, textarea { font-family: inherit; font-size: 15px; }
   box-shadow: 0 30px 80px rgba(0, 0, 0, .35);
   text-align: center;
 }
-.login-logo { height: 46px; border-radius: 8px; margin-bottom: 18px; }
+.login-logo { height: 56px; width: auto; max-width: 100%; display: block; margin: 0 auto 20px; }
 .login-card h1 { font-size: 22px; font-weight: 800; margin-bottom: 4px; }
 .login-sub { color: #64748B; font-size: 14px; font-weight: 600; margin-bottom: 26px; }
 .field { display: flex; flex-direction: column; gap: 6px; text-align: left; margin-bottom: 16px; }
@@ -121,8 +121,17 @@ input, textarea { font-family: inherit; font-size: 15px; }
   z-index: 10;
 }
 .admin-brand { display: flex; align-items: center; gap: 12px; font-weight: 700; font-family: 'Sora', sans-serif; }
-.admin-brand img { height: 32px; border-radius: 7px; }
-.admin-brand small { color: #94A3B8; font-weight: 600; }
+.admin-brand img { height: 34px; width: auto; display: block; }
+.admin-tag {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--violet);
+  background: #EEF0FF;
+  padding: 4px 10px;
+  border-radius: 999px;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
 .admin-header-actions { display: flex; gap: 10px; }
 
 .tabs {
