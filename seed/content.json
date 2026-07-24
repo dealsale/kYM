@@ -3,18 +3,24 @@
     {
       "id": "branding",
       "title": "Branding",
+      "icon": "branding",
+      "grad": "linear-gradient(135deg,#1E3A8A,#6366F1)",
       "desc": "Construimos identidades memorables: logotipo, sistema visual y voz de marca coherente en cada punto de contacto.",
       "points": ["Identidad visual completa", "Manual de marca", "Naming y tono de voz"]
     },
     {
       "id": "social",
       "title": "Manejo de Redes Sociales",
+      "icon": "social",
+      "grad": "linear-gradient(135deg,#6366F1,#FF6B6B)",
       "desc": "Contenido que conecta y comunidades que crecen. Planificamos, creamos y medimos cada publicación.",
       "points": ["Calendario de contenido", "Diseño y copywriting", "Reportes de métricas"]
     },
     {
       "id": "web",
       "title": "Servicios Web",
+      "icon": "web",
+      "grad": "linear-gradient(135deg,#0F172A,#1E3A8A)",
       "desc": "Sitios web rápidos, responsive y optimizados para convertir visitantes en clientes.",
       "points": ["Diseño UX/UI", "Desarrollo responsive", "Optimización y SEO"]
     }

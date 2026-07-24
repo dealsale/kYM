@@ -102,10 +102,52 @@ app.get('/api/content', (req, res) => {
 });
 
 // ---------- admin content management ----------
+// bulk replace (kept for compatibility)
 app.put('/api/admin/services', requireAuth, (req, res) => {
   const data = readContent();
   if (!Array.isArray(req.body)) return res.status(400).json({ error: 'Se esperaba un arreglo' });
   data.services = req.body;
+  writeContent(data);
+  res.json({ ok: true });
+});
+
+// services CRUD
+app.post('/api/admin/services', requireAuth, (req, res) => {
+  const data = readContent();
+  if (!Array.isArray(data.services)) data.services = [];
+  const item = req.body || {};
+  item.id = crypto.randomBytes(6).toString('hex');
+  data.services.push(item);
+  writeContent(data);
+  res.json(item);
+});
+
+app.put('/api/admin/services/:id', requireAuth, (req, res) => {
+  const data = readContent();
+  const idx = (data.services || []).findIndex((s) => s.id === req.params.id);
+  if (idx === -1) return res.status(404).json({ error: 'No encontrado' });
+  data.services[idx] = { ...data.services[idx], ...req.body, id: req.params.id };
+  writeContent(data);
+  res.json(data.services[idx]);
+});
+
+app.delete('/api/admin/services/:id', requireAuth, (req, res) => {
+  const data = readContent();
+  const idx = (data.services || []).findIndex((s) => s.id === req.params.id);
+  if (idx === -1) return res.status(404).json({ error: 'No encontrado' });
+  data.services.splice(idx, 1);
+  writeContent(data);
+  res.json({ ok: true });
+});
+
+app.post('/api/admin/services/:id/reorder', requireAuth, (req, res) => {
+  const data = readContent();
+  const { direction } = req.body || {};
+  const idx = (data.services || []).findIndex((s) => s.id === req.params.id);
+  if (idx === -1) return res.status(404).json({ error: 'No encontrado' });
+  const swapWith = direction === 'up' ? idx - 1 : idx + 1;
+  if (swapWith < 0 || swapWith >= data.services.length) return res.json({ ok: true });
+  [data.services[idx], data.services[swapWith]] = [data.services[swapWith], data.services[idx]];
   writeContent(data);
   res.json({ ok: true });
 });

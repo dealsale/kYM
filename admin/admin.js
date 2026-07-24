@@ -230,85 +230,196 @@
       .catch(function (err) { toast(err.message, true); });
   }
 
-  // ---------------- services ----------------
+  // ---------------- services (CRUD) ----------------
+  var serviceModal = document.getElementById('serviceModal');
+  var serviceForm = document.getElementById('serviceForm');
+  var iconPicker = document.getElementById('iconPicker');
+  var gradientPicker = document.getElementById('gradientPicker');
+  var pointsEditor = document.getElementById('pointsEditor');
+  var editingServiceId = null;
+  var selectedIcon = 'branding';
+  var selectedGrad = (window.KM_GRADIENTS && window.KM_GRADIENTS[0]) || 'linear-gradient(135deg,#1E3A8A,#6366F1)';
+
   function renderServicesAdmin() {
     var list = document.getElementById('servicesList');
     list.innerHTML = '';
-    (state.content.services || []).forEach(function (svc, idx) {
+    var services = state.content.services || [];
+    services.forEach(function (svc, idx) {
       var card = document.createElement('div');
       card.className = 'service-admin-card';
-      card.dataset.index = idx;
+
+      var icon = document.createElement('div');
+      icon.className = 'service-admin-icon';
+      icon.style.background = svc.grad || selectedGrad;
+      icon.innerHTML = window.KM_ICON_SVG(svc.icon || 'branding', { size: 26, stroke: '#fff' });
+      card.appendChild(icon);
 
       var h3 = document.createElement('h3');
-      h3.textContent = svc.title || svc.id;
+      h3.textContent = svc.title || '(sin título)';
       card.appendChild(h3);
 
-      var titleField = fieldEl('Título', 'text', svc.title, 'svc-title');
-      card.appendChild(titleField);
+      var p = document.createElement('p');
+      p.textContent = svc.desc || '';
+      card.appendChild(p);
 
-      var descLabel = document.createElement('label');
-      descLabel.className = 'field';
-      descLabel.innerHTML = '<span>Descripción</span>';
-      var descArea = document.createElement('textarea');
-      descArea.rows = 3;
-      descArea.className = 'svc-desc';
-      descArea.value = svc.desc || '';
-      descLabel.appendChild(descArea);
-      card.appendChild(descLabel);
-
-      var pointsWrap = document.createElement('div');
-      pointsWrap.className = 'points-editor';
-      var pointsLabel = document.createElement('span');
-      pointsLabel.textContent = 'Checklist (3 puntos)';
-      pointsLabel.style.fontSize = '13px';
-      pointsLabel.style.fontWeight = '700';
-      pointsLabel.style.color = '#475569';
-      pointsWrap.appendChild(pointsLabel);
-      for (var i = 0; i < 3; i++) {
-        var input = document.createElement('input');
-        input.type = 'text';
-        input.className = 'svc-point';
-        input.value = (svc.points && svc.points[i]) || '';
-        pointsWrap.appendChild(input);
+      if (svc.points && svc.points.length) {
+        var ul = document.createElement('div');
+        ul.className = 'service-admin-points';
+        svc.points.forEach(function (pt) {
+          var row = document.createElement('div');
+          row.innerHTML = '<span>✓</span>';
+          row.appendChild(document.createTextNode(pt));
+          ul.appendChild(row);
+        });
+        card.appendChild(ul);
       }
-      card.appendChild(pointsWrap);
 
+      var actions = document.createElement('div');
+      actions.className = 'service-admin-actions';
+
+      var upBtn = document.createElement('button');
+      upBtn.className = 'btn-icon';
+      upBtn.title = 'Subir';
+      upBtn.textContent = '↑';
+      upBtn.disabled = idx === 0;
+      upBtn.addEventListener('click', function () { reorderService(svc.id, 'up'); });
+      actions.appendChild(upBtn);
+
+      var downBtn = document.createElement('button');
+      downBtn.className = 'btn-icon';
+      downBtn.title = 'Bajar';
+      downBtn.textContent = '↓';
+      downBtn.disabled = idx === services.length - 1;
+      downBtn.addEventListener('click', function () { reorderService(svc.id, 'down'); });
+      actions.appendChild(downBtn);
+
+      var editBtn = document.createElement('button');
+      editBtn.className = 'btn-icon';
+      editBtn.title = 'Editar';
+      editBtn.textContent = '✎';
+      editBtn.addEventListener('click', function () { openServiceModal(svc); });
+      actions.appendChild(editBtn);
+
+      var delBtn = document.createElement('button');
+      delBtn.className = 'btn-icon danger';
+      delBtn.title = 'Eliminar';
+      delBtn.textContent = '🗑';
+      delBtn.addEventListener('click', function () { deleteService(svc.id); });
+      actions.appendChild(delBtn);
+
+      card.appendChild(actions);
       list.appendChild(card);
     });
   }
 
-  function fieldEl(labelText, type, value) {
-    var label = document.createElement('label');
-    label.className = 'field';
-    var span = document.createElement('span');
-    span.textContent = labelText;
-    label.appendChild(span);
-    var input = document.createElement('input');
-    input.type = type;
-    input.className = 'svc-title';
-    input.value = value || '';
-    label.appendChild(input);
-    return label;
+  function buildIconPicker() {
+    iconPicker.innerHTML = '';
+    (window.KM_ICON_ORDER || []).forEach(function (key) {
+      var opt = document.createElement('button');
+      opt.type = 'button';
+      opt.className = 'icon-opt' + (key === selectedIcon ? ' is-selected' : '');
+      opt.dataset.icon = key;
+      opt.title = (window.KM_ICON_LABELS && window.KM_ICON_LABELS[key]) || key;
+      opt.innerHTML = window.KM_ICON_SVG(key, { size: 22, stroke: '#1E3A8A' });
+      opt.addEventListener('click', function () {
+        selectedIcon = key;
+        buildIconPicker();
+        buildGradientPicker();
+      });
+      iconPicker.appendChild(opt);
+    });
   }
 
-  document.getElementById('saveServicesBtn').addEventListener('click', function () {
-    var cards = document.querySelectorAll('#servicesList .service-admin-card');
-    var services = [];
-    cards.forEach(function (card, idx) {
-      var original = state.content.services[idx];
-      var points = Array.prototype.map.call(card.querySelectorAll('.svc-point'), function (i) { return i.value; })
-        .filter(function (v) { return v.trim() !== ''; });
-      services.push({
-        id: original.id,
-        title: card.querySelector('.svc-title').value,
-        desc: card.querySelector('.svc-desc').value,
-        points: points
+  function buildGradientPicker() {
+    gradientPicker.innerHTML = '';
+    (window.KM_GRADIENTS || []).forEach(function (grad) {
+      var opt = document.createElement('button');
+      opt.type = 'button';
+      opt.className = 'grad-opt' + (grad === selectedGrad ? ' is-selected' : '');
+      opt.style.background = grad;
+      opt.innerHTML = window.KM_ICON_SVG(selectedIcon, { size: 20, stroke: '#fff' });
+      opt.addEventListener('click', function () {
+        selectedGrad = grad;
+        buildGradientPicker();
       });
+      gradientPicker.appendChild(opt);
     });
-    api('PUT', '/api/admin/services', services)
-      .then(function () { toast('Servicios guardados.'); loadContent(); })
-      .catch(function (err) { toast(err.message, true); });
+  }
+
+  function addPointRow(value) {
+    var row = document.createElement('div');
+    row.className = 'point-row';
+    var input = document.createElement('input');
+    input.type = 'text';
+    input.className = 'point-input';
+    input.value = value || '';
+    input.placeholder = 'Ej: Identidad visual completa';
+    var rm = document.createElement('button');
+    rm.type = 'button';
+    rm.className = 'btn-icon danger';
+    rm.textContent = '×';
+    rm.title = 'Quitar';
+    rm.addEventListener('click', function () { row.remove(); });
+    row.appendChild(input);
+    row.appendChild(rm);
+    pointsEditor.appendChild(row);
+  }
+
+  function openServiceModal(svc) {
+    editingServiceId = svc ? svc.id : null;
+    document.getElementById('serviceModalTitle').textContent = svc ? 'Editar servicio' : 'Nuevo servicio';
+    serviceForm.reset();
+    selectedIcon = (svc && svc.icon) || 'branding';
+    selectedGrad = (svc && svc.grad) || (window.KM_GRADIENTS && window.KM_GRADIENTS[0]);
+    if (svc) {
+      serviceForm.title.value = svc.title || '';
+      serviceForm.desc.value = svc.desc || '';
+    }
+    pointsEditor.innerHTML = '';
+    var pts = (svc && svc.points && svc.points.length) ? svc.points : [''];
+    pts.forEach(function (pt) { addPointRow(pt); });
+    buildIconPicker();
+    buildGradientPicker();
+    serviceModal.hidden = false;
+  }
+
+  document.getElementById('addServiceBtn').addEventListener('click', function () { openServiceModal(null); });
+  document.getElementById('serviceModalCancel').addEventListener('click', function () { serviceModal.hidden = true; });
+  document.getElementById('addPointBtn').addEventListener('click', function () { addPointRow(''); });
+
+  serviceForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var points = Array.prototype.map.call(pointsEditor.querySelectorAll('.point-input'), function (i) { return i.value.trim(); })
+      .filter(function (v) { return v !== ''; });
+    var payload = {
+      title: serviceForm.title.value.trim(),
+      desc: serviceForm.desc.value.trim(),
+      icon: selectedIcon,
+      grad: selectedGrad,
+      points: points
+    };
+    var req = editingServiceId
+      ? api('PUT', '/api/admin/services/' + editingServiceId, payload)
+      : api('POST', '/api/admin/services', payload);
+    req.then(function () {
+      serviceModal.hidden = true;
+      toast('Servicio guardado.');
+      loadContent();
+    }).catch(function (err) { toast(err.message, true); });
   });
+
+  function deleteService(id) {
+    if (!confirm('¿Eliminar este servicio?')) return;
+    api('DELETE', '/api/admin/services/' + id)
+      .then(function () { toast('Servicio eliminado.'); loadContent(); })
+      .catch(function (err) { toast(err.message, true); });
+  }
+
+  function reorderService(id, direction) {
+    api('POST', '/api/admin/services/' + id + '/reorder', { direction: direction })
+      .then(function () { loadContent(); })
+      .catch(function (err) { toast(err.message, true); });
+  }
 
   // ---------------- contact / whatsapp ----------------
   function renderContactAdmin() {

@@ -65,9 +65,9 @@
     <section class="tab-panel" data-panel="services">
       <div class="panel-head">
         <h2>Servicios</h2>
-        <button class="btn-primary" id="saveServicesBtn">Guardar cambios</button>
+        <button class="btn-primary" id="addServiceBtn">+ Agregar servicio</button>
       </div>
-      <div id="servicesList" class="services-admin-list"></div>
+      <div id="servicesList" class="services-admin-grid"></div>
     </section>
 
     <!-- CONTACT -->
@@ -171,6 +171,39 @@
   </div>
 </div>
 
+<!-- SERVICE ITEM MODAL -->
+<div id="serviceModal" class="modal" hidden>
+  <div class="modal-card">
+    <h2 id="serviceModalTitle">Servicio</h2>
+    <form id="serviceForm">
+      <label class="field">
+        <span>Título</span>
+        <input type="text" name="title" required placeholder="Branding" />
+      </label>
+      <label class="field">
+        <span>Descripción</span>
+        <textarea name="desc" rows="3" required placeholder="¿Qué incluye este servicio?"></textarea>
+      </label>
+
+      <span class="field-label">Ícono</span>
+      <div id="iconPicker" class="icon-picker"></div>
+
+      <span class="field-label">Color</span>
+      <div id="gradientPicker" class="gradient-picker"></div>
+
+      <span class="field-label">Checklist</span>
+      <div id="pointsEditor" class="points-editor-dyn"></div>
+      <button type="button" class="btn-ghost-sm add-point-btn" id="addPointBtn">+ Agregar punto</button>
+
+      <div class="modal-actions">
+        <button type="button" class="btn-ghost-sm" id="serviceModalCancel">Cancelar</button>
+        <button type="submit" class="btn-primary">Guardar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="/icons.js"></script>
 <script src="admin.js"></script>
 </body>
 </html>

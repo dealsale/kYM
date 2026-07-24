@@ -1,16 +1,6 @@
 (function () {
   'use strict';
 
-  var ICON = {
-    branding: '<circle cx="12" cy="12" r="9"/><path d="M8 12a4 4 0 0 1 8 0M12 3v3M12 18v3"/>',
-    social: '<path d="M4 4h16v12H5.2L4 19V4z"/><path d="M8 9h8M8 12h5"/>',
-    web: '<rect x="3" y="4" width="18" height="14" rx="2"/><path d="M3 9h18M7 14h4"/>'
-  };
-  var SERVICE_GRAD = {
-    branding: 'linear-gradient(135deg,#1E3A8A,#6366F1)',
-    social: 'linear-gradient(135deg,#6366F1,#FF6B6B)',
-    web: 'linear-gradient(135deg,#0F172A,#1E3A8A)'
-  };
   var STAT_STYLE = [
     { bg: 'linear-gradient(135deg,#1E3A8A,#152C6B)', border: '#1E3A8A', color: '#fff' },
     { bg: '#fff', border: '#E2E8F0', color: '#1E3A8A' },
@@ -19,12 +9,12 @@
   ];
   var MARQUEE_WORDS = ['Branding', 'Redes Sociales', 'Desarrollo Web', 'Estrategia Digital', 'Contenido', 'SEO', 'Campañas', 'Diseño UX'];
 
-  function iconSpan(paths) {
+  function iconSpan(key) {
     var span = document.createElement('span');
     span.style.display = 'flex';
     span.style.alignItems = 'center';
     span.style.justifyContent = 'center';
-    span.innerHTML = '<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' + paths + '</svg>';
+    span.innerHTML = window.KM_ICON_SVG(key, { size: 30, stroke: '#fff' });
     return span;
   }
 
@@ -54,8 +44,8 @@
 
       var iconWrap = document.createElement('div');
       iconWrap.className = 'service-icon';
-      iconWrap.style.background = SERVICE_GRAD[svc.id] || SERVICE_GRAD.branding;
-      iconWrap.appendChild(iconSpan(ICON[svc.id] || ICON.branding));
+      iconWrap.style.background = svc.grad || (window.KM_GRADIENTS && window.KM_GRADIENTS[0]) || 'linear-gradient(135deg,#1E3A8A,#6366F1)';
+      iconWrap.appendChild(iconSpan(svc.icon || 'branding'));
       card.appendChild(iconWrap);
 
       var h3 = document.createElement('h3');
